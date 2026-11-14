@@ -16,6 +16,39 @@ Open <http://localhost:8000>. No package installation is needed. Alternatively,
 serve this directory using any static HTTP server (opening `index.html` directly
 does not support JavaScript modules in all browsers).
 
+### Deploy privately on Azure
+
+The app can run on the **Free** Azure Static Web Apps plan without an API or
+other Azure services. `staticwebapp.config.json` restricts every site route to
+the custom `owner` role; merely signing in does not grant access. This protection
+is enforced by Azure Static Web Apps, not by a generic local HTTP server.
+
+1. In the Azure portal, check that your subscription is still an Azure free
+   account with its spending limit enabled. Do not upgrade to pay-as-you-go if
+   you want to avoid charges after the credit runs out. Confirm the plan and
+   current pricing before creating anything.
+2. Create a **Static Web App**, select the **Free** plan, and connect this
+   private GitHub repository and the branch containing this configuration.
+   Under build details, choose **Custom**, set app location to `/`, and leave
+   API and output locations empty. No build step is required. Azure creates a
+   GitHub Actions workflow to deploy the site.
+3. In the new Static Web App, go to **Settings > Role Management > Invite**.
+   Select **Microsoft Entra ID**, enter your Microsoft account email, choose
+   the site's domain, enter `owner` as the role, set a short expiration, and
+   generate an invitation. Open the invitation yourself and sign in with that
+   account. Keep the invitation link private.
+4. Open the site's HTTPS URL. Verify in a private browser window that an
+   anonymous visitor is redirected to sign in, and that a different signed-in
+   account cannot access the app or its files. If either check fails, delete
+   the Static Web App until the access rules are corrected.
+
+The Free plan has a bandwidth quota with no paid bandwidth overage. GitHub
+Actions has separate usage limits, and Azure budgets send alerts rather than
+stopping spending. NASA images are requested directly from NASA by the browser.
+See [Azure Static Web Apps quotas](https://learn.microsoft.com/en-us/azure/static-web-apps/quotas),
+[role invitations](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-custom),
+and [Azure free account terms](https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account).
+
 ### Explore
 
 - The initial **synthetic demo is not NASA data**. It works offline and includes
