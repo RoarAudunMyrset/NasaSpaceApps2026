@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ocean tones · Temperature sonification</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">NASA Space Apps · Explore with sound</p>
+        <h1>Ocean tones</h1>
+        <p>Move across the image to hear temperature. Cooler water plays lower notes;
+          warmer water plays higher notes. Land and missing data are silent.</p>
+      </header>
+
+      <section class="controls" aria-label="Image and sound controls">
+        <label>NASA observation date <input id="date" type="date" value="2025-01-01" required></label>
+        <button id="load" type="button">Load NASA map</button>
+        <button id="demo" class="secondary" type="button">Use demo</button>
+        <button id="sound" type="button" aria-pressed="false">Enable sound</button>
+        <label>Volume <input id="volume" type="range" min="0" max="100" value="25"></label>
+      </section>
+
+      <p id="status" role="status">Synthetic temperature demo — not satellite observations.</p>
+      <section class="map-panel" aria-label="Interactive temperature image">
+        <canvas id="map" width="1440" height="720" tabindex="0"
+          aria-label="Temperature image. Move the pointer or use arrow keys to explore. Escape turns sound off."
+          aria-describedby="help"></canvas>
+        <div class="readout">
+          <strong id="temperature">Explore the image</strong>
+          <span id="tone">Sound off</span>
+        </div>
+        <div id="legend" aria-label="Temperature color legend"></div>
+      </section>
+      <p id="help">Enable sound, then hover or drag across the image. Keyboard: focus the image
+        and use arrow keys; hold Shift for larger steps. Escape mutes. Start with low volume.</p>
+      <footer>
+        <p>NASA mode uses the GHRSST MUR sea surface temperature image and its published color
+          palette from <a href="https://nasa-gibs.github.io/gibs-api-docs/">NASA GIBS</a>.
+          Temperatures are approximate, inferred from image colors, not raw measurements.</p>
+        <p><a href="https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR_Sea_Surface_Temperature"
+          target="_blank" rel="noopener noreferrer">Explore the source in NASA Worldview ↗</a>
+          · This app plays its own image; it cannot track the pointer inside the Worldview website.</p>
+      </footer>
+    </main>
+  </body>
+</html>
