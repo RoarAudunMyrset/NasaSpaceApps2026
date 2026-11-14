@@ -22,6 +22,8 @@ The app can run on the **Free** Azure Static Web Apps plan without an API or
 other Azure services. `staticwebapp.config.json` restricts every site route to
 the custom `owner` role; merely signing in does not grant access. This protection
 is enforced by Azure Static Web Apps, not by a generic local HTTP server.
+The checked-in workflow deploys pushes to `main` to production and pull requests
+targeting `main` to preview environments.
 
 1. In the Azure portal, check that your subscription is still an Azure free
    account with its spending limit enabled. Do not upgrade to pay-as-you-go if
@@ -67,6 +69,30 @@ and [Azure free account terms](https://azure.microsoft.com/en-us/pricing/purchas
   steps). Escape, switching tabs, or leaving the browser window disables sound.
   Temperatures are also displayed without requiring audio.
 
+### Listen through a year
+
+The separate **Listen through a year** section holds one latitude/longitude fixed
+while playing 12 NASA samples, from January to December. Enter coordinates and a
+completed year (2003 onward), or explore the map and select **Use current map
+position**. North/east are positive; south/west are negative. The default
+30°N, 40°W is in the Atlantic. Try 30°S, 40°W with the same year to compare
+seasonal timing across the equator.
+
+Select **Listen through year** to enable sound and load all 12 observations.
+Each sample is from the **first day of the month**, not a monthly average.
+Spoken month/temperature labels precede two-second tones, using a fixed NASA
+palette-to-pitch scale so changes remain comparable. Missing data is announced
+and silent, not treated as cold water. You can turn off spoken labels to use
+your screen reader with the live text status instead. Speech requires browser
+speech synthesis support; failures are reported rather than silently skipped.
+
+**Stop year playback**, Escape, muting, switching tabs, or leaving the browser
+window stops loading/playback and speech. Loading another map or choosing the
+demo also stops year playback. The existing map is not replaced; map exploration
+is paused during playback and available again afterward. A failed monthly
+request reports its date without playing a partial year or substituting demo
+data. Loading requires an internet connection and can take a while.
+
 NASA mode reads the published GIBS palette to estimate temperature from PNG
 colors; it does not fetch raw scientific temperature measurements. Transparent
 or unmatched pixels are silent. Palette bins limit temperature precision.
@@ -82,7 +108,8 @@ npm test
 ```
 
 Tests use Node's built-in runner and cover temperature-to-pitch mapping,
-palette/no-data decoding, and scaled pointer coordinates. There is no build step.
+palette/no-data decoding, scaled pointer coordinates, geographic sampling, and
+monthly date sequencing. There is no build step.
 
 Source: [NASA GIBS API](https://nasa-gibs.github.io/gibs-api-docs/),
 `GHRSST_L4_MUR_Sea_Surface_Temperature`.

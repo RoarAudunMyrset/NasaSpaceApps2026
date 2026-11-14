@@ -37,6 +37,27 @@
       </section>
       <p id="help">Enable sound, then hover or drag across the image. Keyboard: focus the image
         and use arrow keys; hold Shift for larger steps. Escape mutes. Start with low volume.</p>
+      <section class="annual-panel" aria-labelledby="annual-heading">
+        <h2 id="annual-heading">Listen through a year</h2>
+        <p id="annual-help">Stay at one ocean location and hear January through December.
+          Each note uses the same fixed temperature scale as a NASA map. Higher pitch means warmer water;
+          silence means land or missing data. Compare locations north and south of the equator
+          to explore their different seasonal cycles. This uses NASA observations, not the demo.</p>
+        <form id="annual-form" class="controls" aria-describedby="annual-help">
+          <label>Latitude (degrees, north positive)
+            <input id="latitude" type="number" min="-90" max="90" step="any" value="30" required>
+          </label>
+          <label>Longitude (degrees, east positive)
+            <input id="longitude" type="number" min="-180" max="180" step="any" value="-40" required>
+          </label>
+          <label>Year <input id="year" type="number" min="2003" max="2025" step="1" value="2025" required></label>
+          <button id="use-position" class="secondary" type="button">Use current map position</button>
+          <label class="speech-option"><input id="narration" type="checkbox" checked> Speak months and temperatures</label>
+          <button id="annual-start" type="submit">Listen through year</button>
+          <button id="annual-stop" class="secondary" type="button" disabled>Stop year playback</button>
+        </form>
+        <p id="annual-status" role="status" aria-atomic="true">Ready at 30° north, 40° west in the Atlantic. Monthly samples use the first day of each month. Playback enables sound; Escape stops it.</p>
+      </section>
       <footer>
         <p>NASA mode uses the GHRSST MUR sea surface temperature image and its published color
           palette from <a href="https://nasa-gibs.github.io/gibs-api-docs/">NASA GIBS</a>.

@@ -8,8 +8,11 @@ p { line-height: 1.65; max-width: 85ch; }
 .controls { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; margin: 28px 0 16px; }
 label { display: grid; gap: 8px; font-size: .9rem; }
 button, input { font: inherit; }
-button, input[type="date"] { border: 1px solid #639794; border-radius: 8px; padding: 11px 16px; }
-input[type="date"] { background: #112e40; color: #fff; }
+button, input[type="date"], input[type="number"] { border: 1px solid #639794; border-radius: 8px; padding: 11px 16px; }
+input[type="date"], input[type="number"] { background: #112e40; color: #fff; }
+input[type="number"] { width: 180px; }
+.annual-panel { border: 1px solid #345266; border-radius: 12px; padding: 0 22px 10px; margin-top: 28px; }
+.speech-option { display: flex; align-items: center; }
 button { cursor: pointer; background: #83e0d3; color: #09262d; font-weight: 650; }
 button.secondary { background: #173a4b; color: #e7f2f7; }
 button[aria-pressed="true"] { background: #f7c785; }

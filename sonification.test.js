@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatTemperatureRange, imagePoint, temperatureFromPixel, temperatureFromRange, temperatureToFrequency } from './sonification.js';
+import { formatTemperatureRange, geographicPoint, imagePoint, monthlyDates, temperatureFromPixel, temperatureFromRange, temperatureToFrequency } from './sonification.js';
 
 test('colder temperatures have lower pitches over three octaves', () => {
   assert.equal(temperatureToFrequency(-2), 110);
@@ -45,4 +45,22 @@ test('pointer coordinates account for image scaling and clamp edges', () => {
   assert.deepEqual(imagePoint(370, 200, rect, 1440, 720), { x: 720, y: 360 });
   assert.deepEqual(imagePoint(730, 380, rect, 1440, 720), { x: 1439, y: 719 });
   assert.deepEqual(imagePoint(0, 0, rect, 1440, 720), { x: 0, y: 0 });
+});
+
+test('fixed geographic locations sample the correct hemisphere and map edges', () => {
+  assert.deepEqual(geographicPoint(30, -40, 1440, 720), { x: 560, y: 240 });
+  assert.deepEqual(geographicPoint(-30, -40, 1440, 720), { x: 560, y: 480 });
+  assert.deepEqual(geographicPoint(0, 0, 1440, 720), { x: 720, y: 360 });
+  assert.deepEqual(geographicPoint(90, -180, 1440, 720), { x: 0, y: 0 });
+  assert.deepEqual(geographicPoint(-90, 180, 1440, 720), { x: 1439, y: 719 });
+});
+
+test('year playback samples every month in chronological order without date rollover', () => {
+  const dates = monthlyDates(2024);
+  assert.equal(dates.length, 12);
+  assert.equal(dates[0], '2024-01-01');
+  assert.equal(dates[1], '2024-02-01');
+  assert.equal(dates[11], '2024-12-01');
+  assert.equal(new Set(dates).size, 12);
+  assert.deepEqual(dates, [...dates].sort());
 });

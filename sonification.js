@@ -39,3 +39,14 @@ export function imagePoint(clientX, clientY, rect, width, height) {
     y: Math.max(0, Math.min(height - 1, Math.floor((clientY - rect.top) / rect.height * height))),
   };
 }
+
+export function geographicPoint(latitude, longitude, width, height) {
+  return {
+    x: Math.min(width - 1, Math.floor((longitude + 180) / 360 * width)),
+    y: Math.min(height - 1, Math.floor((90 - latitude) / 180 * height)),
+  };
+}
+
+export function monthlyDates(year) {
+  return Array.from({ length: 12 }, (_, month) => `${year}-${String(month + 1).padStart(2, '0')}-01`);
+}
