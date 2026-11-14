@@ -31,7 +31,10 @@ is enforced by Azure Static Web Apps, not by a generic local HTTP server.
    private GitHub repository and the branch containing this configuration.
    Under build details, choose **Custom**, set app location to `/`, and leave
    API and output locations empty. No build step is required. Azure creates a
-   GitHub Actions workflow to deploy the site.
+   GitHub Actions workflow to deploy the site. In its deploy step, set
+   `skip_app_build: true` so Azure uploads the static files without looking for
+   an npm build script. Wait for the first successful deployment before
+   creating your invitation; Azure disables invitations until then.
 3. In the new Static Web App, go to **Settings > Role Management > Invite**.
    Select **Microsoft Entra ID**, enter your Microsoft account email, choose
    the site's domain, enter `owner` as the role, set a short expiration, and
