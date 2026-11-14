@@ -4,6 +4,12 @@
 
 A dependency-free temperature image sonifier for NASA Space Apps.
 
+### Presentation
+
+The [AimForTheStars presentation](docs/presentation.md) explains the project
+journey, the two listening modes, and GitHub Copilot's role in creating the app.
+It includes slide content and speaker notes.
+
 ### Run
 
 With Python 3 and Node.js 18+ installed:
