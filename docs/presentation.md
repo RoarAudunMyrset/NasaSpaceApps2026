@@ -4,7 +4,7 @@
 
 **Project:** Ocean tones  
 **Challenge:** [The Earth Information Jukebox](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/)  
-**Format:** A slide-by-slide presentation with first-person speaker notes, suitable for presenting live, recording, or reading independently.  
+**Format:** A seven-slide presentation with first-person speaker notes, suitable for presenting live, recording, or reading independently.
 **Suggested duration:** 6-8 minutes.
 
 ---
@@ -28,10 +28,10 @@ ways to listen to ocean temperatures.
 
 ## Slide 2 - A challenge that fit my circumstances
 
-- I could not work full days during the challenge.
-- I could not attend the Sunday afternoon presentations.
+- I could not work full days or attend the Sunday afternoon presentations.
 - I formed my own team so I could participate on my own schedule.
-- I chose **The Earth Information Jukebox** from the beginner challenges.
+- I chose **The Earth Information Jukebox**, one of the beginner challenges.
+- Starting with one concrete NASA image made the project manageable.
 
 ### Speaker notes
 
@@ -39,29 +39,31 @@ I wanted to take part even though I had limited time and could not be there
 for the final presentations. Creating my own team let me work around those
 constraints and document the result for others.
 
-I quickly reviewed the challenges, chose The Earth Information Jukebox,
-and then read the complete assignment and explored its resources.
-Starting with one concrete image felt like a manageable way to learn
-and build something useful.
+I reviewed the challenges, chose The Earth Information Jukebox, and explored
+its assignment and resources. Starting with one concrete image felt like a
+manageable way to learn and build something useful.
 
 ---
 
-## Slide 3 - Starting with water temperature
+## Slide 3 - From NASA image to sound
 
-- I chose a sea surface temperature image.
-- A sighted person can recognize broad patterns through color.
-- Water is generally colder toward the poles and warmer near the equator.
-- My question: **Could pitch make that contrast audible?**
+- I chose a NASA sea surface temperature image.
+- The app estimates temperatures from image colors and NASA's published palette.
+- **Colder water = lower pitch. Warmer water = higher pitch.**
+- Land or missing data produces silence.
 
 ### Speaker notes
 
-When I look at a global ocean temperature map, I can see the broad contrast
-between colder polar regions and warmer equatorial regions. There are also
-local differences, so it is not just a simple north-to-south gradient.
+When I look at a global ocean temperature map, I can see broad contrasts:
+water is generally colder toward the poles and warmer near the equator, with
+local differences too. I wanted to explore whether sound could communicate
+some of those patterns.
 
-I wanted to explore whether a person who cannot see the colors could hear
-some of that information instead. The approach is called sonification:
-representing data through sound.
+The app uses NASA GIBS imagery for the GHRSST MUR sea surface temperature
+layer. It translates image colors into approximate temperatures using the
+published color palette, then maps those temperatures to pitch. It does not
+download raw scientific temperature measurements. Silence can mean land or
+unavailable data, not a low temperature.
 
 ---
 
@@ -88,151 +90,75 @@ presenter needs an authorized account; signing in alone does not grant access.
 
 ---
 
-## Slide 5 - First version: move across the world
+## Slide 5 - Explore temperature across the ocean
 
-- Select a date and load a NASA temperature map.
-- Enable sound and move across the image.
-- **Colder water = lower pitch. Warmer water = higher pitch.**
-- Land or missing data produces silence.
-
-### Speaker notes
-
-The first version let me choose a date and move around the world while
-the sound changed according to the temperature at the selected point.
-
-Moving north and south across ocean areas made the broad temperature
-differences audible. The app also supports arrow-key exploration, so
-the interaction is not limited to using a mouse.
-
-The tone can be a little annoying! But it demonstrates the concept:
-sound can provide clues that would otherwise be communicated by color.
-That is a starting point for accessibility, not evidence that the app
-already meets the needs of blind users.
-
----
-
-## Slide 6 - The next question: what if I stay in one place?
-
-- The first version changes **location** while keeping the date fixed.
-- But temperature also changes through the year at the same location.
-- I wanted to make that second pattern audible.
-- That led to **Listen through a year**.
+- Select a date, load a NASA map, enable sound, and move across the image.
+- Explore warmer and colder ocean areas; arrow keys work too.
+- Start at low volume and explain the pitch mapping.
+- If NASA requests fail, the synthetic demo is **not** NASA data.
 
 ### Speaker notes
 
-After trying the map, I thought about what else a sighted person can
-understand from temperature imagery. Geography is only one dimension.
-The same ocean location can have different temperatures during the year.
+The first version lets me choose a date and move around the world while
+the sound changes according to the temperature at the selected point.
+Moving across ocean areas makes broad temperature differences audible.
 
-Instead of moving the pointer across the map, what if I kept the location
-fixed and moved through time? This became the second function.
+For a demonstration, I start at low volume, explain that colder water has
+lower pitch, load an available NASA date, and compare warmer and colder
+locations. The tone can be a little annoying, but it demonstrates the concept.
+The initial synthetic demo is not NASA data; if NASA requests fail, I make
+that distinction clear.
 
-The progression was not about adding an unrelated feature. It was about
-asking what information the first interaction still left out.
+This is a starting point for accessibility, not evidence that the app already
+meets the needs of blind users.
 
 ---
 
-## Slide 7 - Second version: listen through a year
+## Slide 6 - Listen through a year
 
-- Choose a fixed latitude, longitude, and completed year.
+- Keep one latitude and longitude fixed; choose a completed year.
 - Play 12 samples, from January through December.
 - Optional spoken labels announce the month and approximate temperature.
-- The same temperature-to-pitch scale makes the samples comparable.
+- Compare seasonal timing without treating one year as a climate trend.
 
 ### Speaker notes
 
-The year playback holds one location fixed and plays a sequence of
-temperatures. Each sample comes from the first day of a month; these
-are not monthly averages or a continuous recording.
+After trying the map, I wondered what happens if I stay in one place and
+listen as the year changes. This second function holds a location fixed and
+plays a sequence of temperatures.
 
-This lets the listener explore seasonal changes without navigating the
-map throughout playback. Missing data is announced and remains silent,
-rather than being mistaken for cold water.
+Each sample comes from the first day of a month; these are not monthly
+averages or a continuous recording. Missing data is announced and remains
+silent, rather than being mistaken for cold water. The default location is
+30 degrees north, 40 degrees west in the Atlantic, and the app can also copy
+the current map position.
 
-Comparing ocean locations north and south of the equator is another way
-to explore seasonal timing. A single year illustrates variation within
-that year; it does not establish a long-term climate trend.
-
----
-
-## Slide 8 - A short demonstration
-
-1. Start at low volume and explain the pitch mapping.
-2. Load a NASA map for an available date and enable sound.
-3. Move between warmer and colder ocean areas.
-4. Choose a fixed ocean location and play a year.
-5. Listen for changes in pitch while the location stays unchanged.
-
-### Speaker notes
-
-The key comparison is between two questions: "How does temperature change
-across the ocean on one date?" and "How does temperature change through
-the year at one ocean location?"
-
-For year playback, the default location is 30 degrees north, 40 degrees
-west in the Atlantic. The app can also copy the current map position.
-Loading all 12 samples may take a while, so prepare the demonstration
-with a working internet connection and an authorized Azure login.
-
-The initial synthetic demo is not NASA data. If NASA requests fail, make
-that distinction clear rather than presenting the demo as observations.
-A recording can accompany this presentation when I cannot attend.
+Comparing ocean locations north and south of the equator is another way to
+explore seasonal timing. A single year illustrates variation within that
+year; it does not establish a long-term climate trend. Loading all 12 samples
+may take a while, so prepare with a working internet connection and an
+authorized Azure login.
 
 ---
 
-## Slide 9 - What this proof of concept does and does not show
+## Slide 7 - What this proof of concept shows
 
-- NASA imagery provides the starting point.
-- Temperatures are **estimated from image colors and the published palette**.
-- Sound offers an additional way to explore spatial and seasonal patterns.
-- Accessibility and listening comfort still need evaluation with users.
-
-### Speaker notes
-
-The app uses NASA GIBS imagery for the GHRSST MUR sea surface temperature
-layer. It translates image colors into approximate temperatures using
-the published color palette, then maps those temperatures to pitch.
-It does not download raw scientific temperature measurements.
-
-That limits precision, and silence can mean land or unavailable data,
-not a low temperature. The result is an exploratory prototype, not a
-scientific measurement tool.
-
-I would want feedback from blind and low-vision users before claiming
-that the experience is genuinely useful to them. Improving the sound
-and navigation would be important next steps.
-
----
-
-## Slide 10 - What I learned
-
-- A small starting point can lead to a meaningful experiment.
-- Constraints shaped the implementation, but did not prevent participation.
-- **GitHub Copilot helped me create the application and iterate on the idea.**
-- First, I explored temperature across space. Then, I explored it through time.
+- Two ways to explore temperature: across **space** and through **time**.
+- Image-color estimates are exploratory, not scientific measurements.
+- Accessibility and listening comfort need evaluation with users.
+- **Credits:** NASA GIBS imagery and palette; GitHub Copilot; Azure Static Web Apps.
 
 ### Speaker notes
 
 My contribution was choosing the problem, deciding what I wanted to
-communicate, trying the result, and identifying the next question.
-GitHub Copilot was the AI coding assistant I used to create the application;
-it was part of the development process, not something I want to leave
-uncredited.
+communicate, trying the result, and identifying the next question. GitHub
+Copilot was the AI coding assistant I used to create the application; it was
+part of the development process, not something I want to leave uncredited.
 
 The biggest lesson was that translating an image into sound is not just
 about replacing a color with a note. It is about deciding which patterns
 someone should be able to explore and how to make those patterns understandable.
+I would want feedback from blind and low-vision users before claiming that
+the experience is genuinely useful to them.
 
-AimForTheStars started with a simple question: can we hear what this map
-shows? This proof of concept offers two small ways to try.
-
----
-
-## Credits and references
-
-- **Challenge:** [The Earth Information Jukebox - NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/).
-- **Imagery and palette:** [NASA Global Imagery Browse Services (GIBS)](https://nasa-gibs.github.io/gibs-api-docs/), using `GHRSST_L4_MUR_Sea_Surface_Temperature` imagery.
-- **Source exploration:** [NASA Worldview sea surface temperature layer](https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR_Sea_Surface_Temperature).
-- **AI-assisted development:** GitHub Copilot was used to create the application.
-- **Hosting:** Microsoft Azure Static Web Apps, Free plan, with restricted access.
-- **Usage and technical details:** [Project README](../README.md).
+**References:** [The Earth Information Jukebox - NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/); [NASA Global Imagery Browse Services (GIBS)](https://nasa-gibs.github.io/gibs-api-docs/); [NASA Worldview sea surface temperature layer](https://worldview.earthdata.nasa.gov/?l=GHRSST_L4_MUR_Sea_Surface_Temperature). See the [project README](../README.md) for usage and technical details.
