@@ -37,6 +37,18 @@
       </section>
       <p id="help">Enable sound, then hover or drag across the image. Keyboard: focus the image
         and use arrow keys; hold Shift for larger steps. Escape mutes. Start with low volume.</p>
+      <section class="annual-panel" aria-labelledby="summary-heading">
+        <h2 id="summary-heading">Describe this map</h2>
+        <p>Send the current map and its legend to Azure AI for a short description of visible patterns.
+          AI descriptions can be mistaken. The demo is synthetic, not an observation.</p>
+        <div class="controls">
+          <button id="describe" type="button">Describe current map</button>
+          <button id="summary-stop" class="secondary" type="button" disabled>Stop description</button>
+          <label class="speech-option"><input id="summary-speech" type="checkbox" checked> Speak description</label>
+        </div>
+        <p id="summary-status" role="status" aria-atomic="true">Ready to describe the current map.</p>
+        <p id="summary-text"></p>
+      </section>
       <section class="annual-panel" aria-labelledby="annual-heading">
         <h2 id="annual-heading">Listen through a year</h2>
         <p id="annual-help">Stay at one ocean location and hear January through December.

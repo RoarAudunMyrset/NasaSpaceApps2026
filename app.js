@@ -12,8 +12,15 @@ const annualForm = document.querySelector('#annual-form');
 const annualStatus = document.querySelector('#annual-status');
 const annualStop = document.querySelector('#annual-stop');
 const yearInput = document.querySelector('#year');
+const describeButton = document.querySelector('#describe');
+const summaryStop = document.querySelector('#summary-stop');
+const summaryStatus = document.querySelector('#summary-status');
+const summaryText = document.querySelector('#summary-text');
+const summarySpeech = document.querySelector('#summary-speech');
 yearInput.max = new Date().getUTCFullYear() - 1;
 let annualSession;
+let summarySession;
+let mapSource;
 let palette = [];
 let pixels;
 let minimum = -2;
@@ -33,6 +40,7 @@ function silence() {
 
 function setSoundOff() {
   stopYear();
+  stopSummary();
   soundRequest++;
   enabled = false;
   soundButton.textContent = 'Enable sound';
@@ -57,7 +65,8 @@ function sample() {
   gain.gain.setTargetAtTime(Number(volume.value) / 100 * 0.2, audio.currentTime, 0.03);
 }
 
-function updateImage(nextPalette, image) {
+function updateImage(nextPalette, image, source) {
+  stopSummary('Map changed. Request a new description.');
   silence();
   active = false;
   palette = nextPalette;
@@ -65,6 +74,9 @@ function updateImage(nextPalette, image) {
   maximum = Math.max(...palette.map(entry => entry.temperature));
   context.putImageData(image, 0, 0);
   pixels = image.data;
+  mapSource = source;
+  summaryText.textContent = '';
+  summaryStatus.textContent = 'Ready to describe the current map.';
   const legend = document.querySelector('#legend');
   legend.style.setProperty('--palette', `linear-gradient(to right, ${palette.map(entry => `rgb(${entry.rgb.join(',')})`).join(',')})`);
   legend.replaceChildren(...[`${minimum.toFixed(1)} °C · lower pitch`, `${maximum.toFixed(1)} °C · higher pitch`].map(text => {
@@ -99,7 +111,7 @@ function showDemo() {
       image.data.set(missing ? [14, 38, 54, 255] : [...rgb, 255], (y * canvas.width + x) * 4);
     }
   }
-  updateImage(demoPalette, image);
+  updateImage(demoPalette, image, { source: 'demo' });
   status.textContent = 'Synthetic temperature demo — not satellite observations. The dark rectangle demonstrates missing data.';
 }
 
@@ -165,7 +177,7 @@ async function loadNASA() {
   try {
     const result = await fetchNASA(selectedDate, controller.signal);
     if (controller.signal.aborted) return;
-    updateImage(result.palette, result.image);
+    updateImage(result.palette, result.image, { source: 'nasa', date: selectedDate });
     status.textContent = `NASA GHRSST MUR sea surface temperature · ${selectedDate} · geographic world map (180°W to 180°E).`;
   } catch {
     if (request === controller) status.textContent = 'Could not load NASA data for this date. Check your connection or try an earlier date. The previous image is unchanged; the demo is available offline.';
@@ -203,7 +215,10 @@ async function enableSound() {
 
 soundButton.addEventListener('click', () => {
   if (enabled || annualSession) setSoundOff();
-  else enableSound();
+  else {
+    stopSummary();
+    enableSound();
+  }
 });
 
 canvas.addEventListener('pointermove', event => {
@@ -246,6 +261,83 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) setSo
 window.addEventListener('blur', setSoundOff);
 loadButton.addEventListener('click', loadNASA);
 document.querySelector('#demo').addEventListener('click', showDemo);
+
+function stopSummary(message = 'Description stopped.') {
+  if (!summarySession) return;
+  const session = summarySession;
+  summarySession = null;
+  clearTimeout(session.timeout);
+  session.controller.abort();
+  if (session.speaking) window.speechSynthesis?.cancel();
+  describeButton.disabled = false;
+  summaryStop.disabled = true;
+  summaryStatus.textContent = message;
+}
+
+function descriptionImage() {
+  const buffer = document.createElement('canvas');
+  buffer.width = canvas.width;
+  buffer.height = canvas.height + 100;
+  const ctx = buffer.getContext('2d');
+  ctx.fillStyle = '#0e2636';
+  ctx.fillRect(0, 0, buffer.width, buffer.height);
+  ctx.drawImage(canvas, 0, 0);
+  const width = buffer.width / palette.length;
+  palette.forEach((entry, i) => {
+    ctx.fillStyle = `rgb(${entry.rgb.join(',')})`;
+    ctx.fillRect(i * width, canvas.height + 12, Math.ceil(width), 24);
+  });
+  ctx.fillStyle = 'white';
+  ctx.font = '24px sans-serif';
+  ctx.fillText(`${minimum.toFixed(1)} °C (cooler)`, 10, canvas.height + 70);
+  ctx.textAlign = 'right';
+  ctx.fillText(`${maximum.toFixed(1)} °C (warmer)`, buffer.width - 10, canvas.height + 70);
+  return buffer.toDataURL('image/png');
+}
+
+describeButton.addEventListener('click', async () => {
+  setSoundOff();
+  const session = { controller: new AbortController(), speaking: false };
+  summarySession = session;
+  session.timeout = setTimeout(() => {
+    if (summarySession === session) stopSummary('Description timed out. Please try again.');
+  }, 40000);
+  describeButton.disabled = true;
+  summaryStop.disabled = false;
+  summaryText.textContent = '';
+  summaryStatus.textContent = 'Sending the current map to Azure AI for description…';
+  try {
+    const response = await fetch('/api/describe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...mapSource, image: descriptionImage() }),
+      signal: session.controller.signal,
+    });
+    if (!response.ok) throw new Error();
+    const result = await response.json();
+    if (summarySession !== session) return;
+    if (typeof result.summary !== 'string' || !result.summary.trim()) throw new Error();
+    clearTimeout(session.timeout);
+    summaryText.textContent = result.summary;
+    if (!summarySpeech.checked) {
+      stopSummary('Description ready below. AI descriptions can be mistaken.');
+    } else if (!('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window)) {
+      stopSummary('Speech is unavailable in this browser. The description is available below.');
+    } else {
+      const utterance = new SpeechSynthesisUtterance(result.summary);
+      utterance.lang = 'en-US';
+      utterance.volume = Number(volume.value) / 100;
+      session.speaking = true;
+      utterance.onend = () => { if (summarySession === session) stopSummary('Description ready below. AI descriptions can be mistaken.'); };
+      utterance.onerror = () => { if (summarySession === session) stopSummary('Speech failed. The description is available below.'); };
+      summaryStatus.textContent = 'Speaking the description. AI descriptions can be mistaken.';
+      window.speechSynthesis.speak(utterance);
+    }
+  } catch {
+    if (summarySession === session) stopSummary('Could not describe this map. Check the Azure service configuration or connection and try again.');
+  }
+});
+summaryStop.addEventListener('click', () => stopSummary());
 
 function stopYear(message = 'Year playback stopped.') {
   if (!annualSession) return;
@@ -300,6 +392,7 @@ function speakMonth(text, signal) {
 annualForm.addEventListener('submit', async event => {
   event.preventDefault();
   if (annualSession || !annualForm.reportValidity()) return;
+  stopSummary();
   const latitude = Number(document.querySelector('#latitude').value);
   const longitude = Number(document.querySelector('#longitude').value);
   const year = Number(yearInput.value);

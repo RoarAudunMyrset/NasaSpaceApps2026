@@ -20,12 +20,14 @@ npm start
 
 Open <http://localhost:8000>. No package installation is needed. Alternatively,
 serve this directory using any static HTTP server (opening `index.html` directly
-does not support JavaScript modules in all browsers).
+does not support JavaScript modules in all browsers). The static server does not
+run the Azure Functions API, so map descriptions require the deployed service.
 
 ### Deploy privately on Azure
 
-The app can run on the **Free** Azure Static Web Apps plan without an API or
-other Azure services. `staticwebapp.config.json` restricts every site route to
+The app can run on the **Free** Azure Static Web Apps plan; spoken map descriptions
+additionally require a separately provisioned Azure OpenAI vision deployment.
+`staticwebapp.config.json` restricts every site route, including the API, to
 the custom `owner` role; merely signing in does not grant access. This protection
 is enforced by Azure Static Web Apps, not by a generic local HTTP server.
 The checked-in workflow deploys pushes to `main` to production and pull requests
@@ -38,10 +40,10 @@ targeting `main` to preview environments.
 2. Create a **Static Web App**, select the **Free** plan, and connect this
    private GitHub repository and the branch containing this configuration.
    Under build details, choose **Custom**, set app location to `/`, and leave
-   API and output locations empty. No build step is required. Azure creates a
+   API location to `api` and output location empty. No app build step is required. Azure creates a
    GitHub Actions workflow to deploy the site. In its deploy step, set
-   `skip_app_build: true` so Azure uploads the static files without looking for
-   an npm build script. Wait for the first successful deployment before
+   `skip_app_build: true` and `api_location: "api"` as in the checked-in
+   workflow. Wait for the first successful deployment before
    creating your invitation; Azure disables invitations until then.
 3. In the new Static Web App, go to **Settings > Role Management > Invite**.
    Select **Microsoft Entra ID**, enter your Microsoft account email, choose
@@ -60,6 +62,30 @@ See [Azure Static Web Apps quotas](https://learn.microsoft.com/en-us/azure/stati
 [role invitations](https://learn.microsoft.com/en-us/azure/static-web-apps/authentication-custom),
 and [Azure free account terms](https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account).
 
+### Configure Azure map descriptions
+
+1. Provision an Azure OpenAI resource and deploy a vision-capable chat model that
+   supports image inputs and the `2024-02-15-preview` chat completions API.
+   Check availability, data handling, and pricing before enabling it: image
+   requests can incur charges independently of the Static Web Apps Free plan.
+   Budgets are alerts, not hard spending limits.
+2. In the Static Web App's **Settings > Configuration**, add application settings
+   `OPENAI_ENDPOINT` (the resource's `https://...openai.azure.com/` endpoint),
+   `OPENAI_DEPLOYMENT` (deployment name), and `OPENAI_API_KEY` (resource key).
+   These settings are used by the managed API, not the browser; never commit the
+   key or put it in static files. Configure settings for the environment being
+   used, including previews if applicable.
+3. Verify that an anonymous visitor and a signed-in user without `owner` cannot
+   call `/api/describe`, and that an owner can describe a map. The API relies on
+   Static Web Apps route authorization; do not expose the function separately.
+   The plain `npm start` server cannot run or protect this API.
+
+Each request sends the displayed map, its color legend, and its source/date to
+Azure OpenAI. The generated description is an AI interpretation of rendered
+colors, not a scientific analysis; it can miss or misidentify features such as
+the Gulf Stream. Check important claims against the source data. Stopping a
+request may not prevent a charge once Azure has received it.
+
 ### Explore
 
 - The initial **synthetic demo is not NASA data**. It works offline and includes
@@ -74,6 +100,13 @@ and [Azure free account terms](https://azure.microsoft.com/en-us/pricing/purchas
 - Keyboard: focus the image with Tab, then use arrow keys (Shift for larger
   steps). Escape, switching tabs, or leaving the browser window disables sound.
   Temperatures are also displayed without requiring audio.
+- Select **Describe current map** to request a short description of the current
+  demo or NASA map. The result appears as text and is spoken at the selected
+  volume when browser speech synthesis is available. Uncheck **Speak
+  description** to read it with a screen reader instead. **Stop description**,
+  Escape, changing maps, starting year playback, switching tabs, or leaving the
+  browser window stops the request or speech. The previous map remains available
+  if a NASA load fails.
 
 ### Listen through a year
 
@@ -115,7 +148,8 @@ npm test
 
 Tests use Node's built-in runner and cover temperature-to-pitch mapping,
 palette/no-data decoding, scaled pointer coordinates, geographic sampling, and
-monthly date sequencing. There is no build step.
+monthly date sequencing, plus description API validation and Azure request
+handling with a mocked service. There is no app build step.
 
 Source: [NASA GIBS API](https://nasa-gibs.github.io/gibs-api-docs/),
 `GHRSST_L4_MUR_Sea_Surface_Temperature`.
