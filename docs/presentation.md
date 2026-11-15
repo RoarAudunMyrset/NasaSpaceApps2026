@@ -97,6 +97,8 @@ presenter needs an authorized account; signing in alone does not grant access.
 - Start at low volume and explain the pitch mapping.
 - If NASA requests fail, the synthetic demo is **not** NASA data.
 
+![NASA GHRSST MUR sea surface temperature map in Ocean tones for 2025-01-01](screenshots/function-1-map-exploration.png)
+
 ### Speaker notes
 
 The first version lets me choose a date and move around the world while
@@ -120,6 +122,8 @@ meets the needs of blind users.
 - Play 12 samples, from January through December.
 - Optional spoken labels announce the month and approximate temperature.
 - Compare seasonal timing without treating one year as a climate trend.
+
+![Listen through a year controls with a fixed Atlantic location and 2025 selected](screenshots/function-2-listen-through-a-year.png)
 
 ### Speaker notes
 
