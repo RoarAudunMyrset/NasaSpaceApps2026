@@ -32,6 +32,7 @@ test('description API sends the map and context to configured Azure vision deplo
     globalThis.fetch = async (url, options) => {
       assert.equal(url.hostname, 'example.openai.azure.com');
       assert.equal(url.pathname, '/openai/deployments/vision-model/chat/completions');
+      assert.equal(url.searchParams.get('api-version'), '2024-10-21');
       assert.equal(options.headers['api-key'], 'test-key');
       const body = JSON.parse(options.body);
       assert.match(body.messages[1].content[0].text, /2025-01-01/);

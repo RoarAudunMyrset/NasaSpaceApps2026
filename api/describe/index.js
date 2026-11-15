@@ -21,7 +21,7 @@ module.exports = async function (context, req) {
     return;
   }
 
-  const url = new URL(`/openai/deployments/${encodeURIComponent(OPENAI_DEPLOYMENT)}/chat/completions?api-version=2024-02-15-preview`, endpoint);
+  const url = new URL(`/openai/deployments/${encodeURIComponent(OPENAI_DEPLOYMENT)}/chat/completions?api-version=2024-10-21`, endpoint);
   try {
     const response = await fetch(url, {
       method: 'POST',

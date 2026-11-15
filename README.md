@@ -65,7 +65,7 @@ and [Azure free account terms](https://azure.microsoft.com/en-us/pricing/purchas
 ### Configure Azure map descriptions
 
 1. Provision an Azure OpenAI resource and deploy a vision-capable chat model that
-   supports image inputs and the `2024-02-15-preview` chat completions API.
+   supports image inputs and the `2024-10-21` chat completions API.
    Check availability, data handling, and pricing before enabling it: image
    requests can incur charges independently of the Static Web Apps Free plan.
    Budgets are alerts, not hard spending limits.
