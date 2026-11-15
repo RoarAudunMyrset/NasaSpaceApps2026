@@ -40,7 +40,7 @@ test('description API sends the map and context to configured Azure vision deplo
     };
     const context = {};
     await describe(context, request);
-    assert.deepEqual(context.res, { status: 200, jsonBody: { summary: 'Warm near the equator.' } });
+    assert.deepEqual(context.res, { status: 200, body: { summary: 'Warm near the equator.' } });
     globalThis.fetch = async () => ({ ok: false });
     await describe(context, request);
     assert.equal(context.res.status, 502);
